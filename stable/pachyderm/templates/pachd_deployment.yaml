@@ -18,6 +18,7 @@ spec:
   template:
     metadata:
       name: pachd
+      namespace: {{ .Release.Namespace }}
       annotations:
         {{- if .Values.amazon.roleArn }}
         iam.amazonaws.com/role: {{ .Values.amazon.roleArn }}
@@ -44,8 +45,19 @@ spec:
           protocol: TCP
         - name: trace-port
           containerPort: 651
+          protocol: TCP
         - name: api-http-port
           containerPort: 652
+          protocol: TCP
+        - name: peer-port
+          containerPort: 653
+          protocol: TCP
+        - name: api-git-port
+          containerPort: 999
+          protocol: TCP
+        - name: saml-port
+          containerPort: 654
+          protocol: TCP
         env:
         - name: EXPOSE_OBJECT_API
           value: {{ .Values.pachd.exposeObjApi | quote }}
@@ -54,15 +66,15 @@ spec:
         - name: NUM_SHARDS
           value: '16'
         - name: STORAGE_BACKEND
-          {{- if eq .Values.credentials "s3" }}
-          value: MINIO
-          {{- else if eq .Values.credentials "google" }}
+          {{- if eq .Values.credentials "s3" }} 
+          value: MINIO #Double check
+          {{- else if eq .Values.credentials "google" }} #TODO toUpper
           value: GOOGLE
-          {{- else if eq .Values.credentials "amazon" }}
+          {{- else if eq .Values.credentials "amazon" }} #TODO toUpper
           value: AMAZON
-          {{- else if eq .Values.credentials "microsoft" }}
+          {{- else if eq .Values.credentials "microsoft" }} #TODO toUpper
           value: MICROSOFT
-          {{- else if eq .Values.credentials "local" }}
+          {{- else if eq .Values.credentials "local" }} #TODO toUpper
           value: LOCAL
           {{- end }}
         - name: STORAGE_HOST_PATH
@@ -87,6 +99,11 @@ spec:
               name: pachyderm-storage-secret
               key: amazon-bucket
               optional: true
+        - name: AMAZON_VAULT_ADDR
+          valueFrom:
+            secretKeyRef:
+              key: amazon-vault-addr
+              name: pachyderm-storage-secret
         - name: AMAZON_DISTRIBUTION
           valueFrom:
             secretKeyRef:
@@ -176,6 +193,12 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
+        - name: PACHD_MEMORY_REQUEST
+          valueFrom:
+            resourceFieldRef:
+              containerName: pachd
+              divisor: "0"
+              resource: requests.memory
         - name: WORKER_IMAGE
           value: '{{ .Values.pachd.worker.repository }}:{{ .Values.pachd.worker.tag }}'
         - name: WORKER_SIDECAR_IMAGE
@@ -194,6 +217,8 @@ spec:
         - name: IAM_ROLE
           value: {{ .Values.amazon.roleArn }}
         {{- end }}
+        - name: NO_EXPOSE_DOCKER_SOCKET
+          value: "false"
         - name: PACHYDERM_AUTHENTICATION_DISABLED_FOR_TESTING
           value: 'false'
         resources:
@@ -214,5 +239,3 @@ spec:
         securityContext:
           privileged: true
       serviceAccountName: {{ template "fullname" . }}
-  strategy: {}
-status: {}

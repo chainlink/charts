@@ -44,5 +44,5 @@ rules:
   resources:
   - secrets
   resourceNames:
-  - pachyderm-storage-secret
+  - pachyderm-storage-secret # must match secret name
 {{- end }}

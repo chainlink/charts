@@ -16,4 +16,4 @@ spec:
       targetPort: 0
   selector:
     app: {{ template "etcd.fullname" . }}
-  type: NodePort
+  type: {{ .Values.etcd.service.type }}

@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dash
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: dash
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    suite: {{ template "fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: dash
+      suite: {{ template "fullname" . }}
+  strategy: {}
+  template:
+    metadata:
+      name: dash
+      namespace: {{ .Release.Namespace }}
+      labels:
+        app: dash
+      suite: {{ template "fullname" . }}
+
+    spec:
+      containers:
+      - image: '{{ .Values.dash.image.repository }}:{{ .Values.dash.image.tag }}'
+        imagePullPolicy: IfNotPresent
+        name: dash
+        ports:
+        - containerPort: 8080
+          name: dash-http
+        resources: {}
+      - image: '{{ .Values.dash.proxy.image.repository }}:{{ .Values.dash.proxy.image.tag }}'
+        imagePullPolicy: IfNotPresent
+        name: grpc-proxy
+        ports:
+        - containerPort: 8081
+          name: grpc-proxy-http
+        resources: {}
