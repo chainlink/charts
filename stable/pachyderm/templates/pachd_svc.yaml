@@ -42,6 +42,7 @@ spec:
       {{- end }}
       port: {{ .Values.pachd.service.saml.port }}
       targetPort: saml-port
+      {{- end }}
     - name: api-git-port
       {{- if eq .Values.pachd.service.type "NodePort" }}
       nodePort: {{ .Values.pachd.service.git.nodePort }}
