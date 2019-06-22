@@ -6,7 +6,7 @@ $ curl -o /tmp/pachctl.deb -L https://github.com/pachyderm/pachyderm/releases/do
 
 And on Mac:
 
-$ brew tap pachyderm/tap && brew install pachyderm/tap/pachctl@1.7
+$ brew tap pachyderm/tap && brew install pachyderm/tap/pachctl@1.9
 
 To check that installation was successful, you can try running pachctl help, which should return a list of Pachyderm commands.  
 
