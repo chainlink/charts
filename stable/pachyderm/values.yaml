@@ -33,6 +33,7 @@ amazon:
  roleArn: ""
  secret: ""
  token: ""
+ vaultAddr: "" #TODO Add to readme
 
 ## Microsoft Azure credentials
 microsoft:

@@ -41,6 +41,7 @@ spec:
           - "--data-dir=/var/data/etcd"
           - "--auto-compaction-retention=1"
           - "--max-txn-ops=5000"
+          - "--quota-backend-bytes=8589934592"
           ports:
             - name: client-port
               containerPort: 2379
