@@ -65,16 +65,18 @@ spec:
           value: "/pach"
         - name: NUM_SHARDS
           value: '16'
+          #TODO Double check s3 -> Minio
+          #TODO toUpper?
         - name: STORAGE_BACKEND
           {{- if eq .Values.credentials "s3" }} 
-          value: MINIO #Double check
-          {{- else if eq .Values.credentials "google" }} #TODO toUpper
+          value: MINIO
+          {{- else if eq .Values.credentials "google" }}
           value: GOOGLE
-          {{- else if eq .Values.credentials "amazon" }} #TODO toUpper
+          {{- else if eq .Values.credentials "amazon" }}
           value: AMAZON
-          {{- else if eq .Values.credentials "microsoft" }} #TODO toUpper
+          {{- else if eq .Values.credentials "microsoft" }}
           value: MICROSOFT
-          {{- else if eq .Values.credentials "local" }} #TODO toUpper
+          {{- else if eq .Values.credentials "local" }}
           value: LOCAL
           {{- end }}
         - name: STORAGE_HOST_PATH
@@ -215,7 +217,7 @@ spec:
           value: '{{ .Values.pachd.pfsCache }}'
         {{- if eq .Values.credentials "amazon" }}
         - name: IAM_ROLE
-          value: {{ .Values.amazon.roleArn }}
+          value: {{ required "Must have roleArn if using Amazon" .Values.amazon.roleArn }}
         {{- end }}
         - name: NO_EXPOSE_DOCKER_SOCKET
           value: "false"
