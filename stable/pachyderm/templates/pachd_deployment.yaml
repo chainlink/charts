@@ -58,6 +58,9 @@ spec:
         - name: saml-port
           containerPort: 654
           protocol: TCP
+        envFrom:
+        - secretRef:
+            name: pachyderm-storage-secret
         env:
         - name: EXPOSE_OBJECT_API
           value: {{ .Values.pachd.exposeObjApi | quote }}
@@ -81,113 +84,6 @@ spec:
           {{- if eq .Values.credentials "local" }}
           value: "/var/pachyderm/pachd"
           {{- end }}
-        - name: GOOGLE_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: google-bucket
-              optional: true
-        - name: GOOGLE_CRED
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: google-cred
-              optional: true
-        - name: AMAZON_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-bucket
-              optional: true
-        - name: AMAZON_VAULT_ADDR
-          valueFrom:
-            secretKeyRef:
-              key: amazon-vault-addr
-              name: pachyderm-storage-secret
-        - name: AMAZON_DISTRIBUTION
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-distribution
-              optional: true
-        - name: AMAZON_ID
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-id
-              optional: true
-        - name: AMAZON_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-secret
-              optional: true
-        - name: AMAZON_REGION
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-region
-              optional: true
-        - name: AMAZON_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: amazon-token
-              optional: true
-        - name: MICROSOFT_CONTAINER
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: microsoft-container
-              optional: true
-        - name: MICROSOFT_ID
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: microsoft-id
-              optional: true
-        - name: MICROSOFT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: microsoft-secret
-              optional: true
-        - name: MINIO_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-endpoint
-              optional: true
-        - name: MINIO_BUCKET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-bucket
-              optional: true
-        - name: MINIO_SECURE
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-secure
-              optional: true
-        - name: MINIO_ID
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-id
-              optional: true
-        - name: MINIO_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-secret
-              optional: true
-        - name: MINIO_SIGNATURE
-          valueFrom:
-            secretKeyRef:
-              name: pachyderm-storage-secret
-              key: minio-signature
-              optional: true
         - name: PACHD_POD_NAMESPACE
           valueFrom:
             fieldRef:
