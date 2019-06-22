@@ -22,7 +22,6 @@ spec:
       labels:
         app: dash
       suite: {{ template "fullname" . }}
-
     spec:
       containers:
       - image: '{{ .Values.dash.image.repository }}:{{ .Values.dash.image.tag }}'
