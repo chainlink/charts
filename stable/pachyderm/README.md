@@ -30,8 +30,8 @@ The following table lists the configurable parameters of `pachd` and their defau
 | `*.resources.requests`        | Memory and cpu request              | `{512M,250m}`     |
 | `*.resources.limits`          | Memory and cpu limit                | `nil`             |
 | `*.service.grpc.annotations`  | GRPC service additional annotations | `{}`              |
-| `*.service.grpc.prod`         | GRPC service port                   | `30650`             |
-| `*.service.grpc.type`         | GRPC service type                   | `NodePort`        |
+| `*.service.grpc.port`         | GRPC service port                   | `30650`           |
+| `*.service.type`              | Service type                        | `NodePort`        |
 
 Next table lists the configurable parameters of `etcd` and their default values:
 
