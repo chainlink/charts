@@ -30,7 +30,7 @@ The following table lists the configurable parameters of `pachd` and their defau
 | `*.resources.requests`        | Memory and cpu request              | `{512M,250m}`     |
 | `*.resources.limits`          | Memory and cpu limit                | `nil`             |
 | `*.service.grpc.annotations`  | GRPC service additional annotations | `{}`              |
-| `*.service.grpc.prod`         | GRPC service pord                   | `30650`             |
+| `*.service.grpc.prod`         | GRPC service port                   | `30650`             |
 | `*.service.grpc.type`         | GRPC service type                   | `NodePort`        |
 
 Next table lists the configurable parameters of `etcd` and their default values:
@@ -55,7 +55,7 @@ In order to set which object store credentials you want to use, please set the f
 
 Based on the storage credentials used, fill in the corresponding parameters for your object store. Note that The `local` installation will deploy Pachyderm on your local Kubernetes cluster (i.e: minikube) backed by your local storage unit.
 
-*Note:* If using `local` on a cloud provider like Google cloud, pachderm will be configured to use hostPath, which is ephemeral storage and may be deleted if the node is recycled.
+*Note:* If using `local` on a cloud provider like Google cloud, Pachyderm will be configured to use hostPath for both pachd and etcd, which is ephemeral storage and may be deleted if the node is recycled.
 
 On-premises deployment
 ------------------------
