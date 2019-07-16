@@ -3,6 +3,7 @@ kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: pachd
+  namespace: {{ .Release.Namespace }}
   labels:
     app: pachd
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -33,9 +34,11 @@ spec:
         hostPath:
          path: "/var/pachyderm/pachd"
         {{- end }}
+        {{- if ne .Values.credentials "local" }}
       - name: pachyderm-storage-secret
         secret:
           secretName: pachyderm-storage-secret
+        {{- end }}
       containers:
       - name: pachd
         image: '{{ .Values.pachd.image.repository }}:{{ .Values.pachd.image.tag }}'
@@ -58,6 +61,9 @@ spec:
         - name: saml-port
           containerPort: 654
           protocol: TCP
+        - name: s3gateway-port
+          containerPort: 600
+          protocol: TCP
         env:
         - name: EXPOSE_OBJECT_API
           value: {{ .Values.pachd.exposeObjApi | quote }}
@@ -65,24 +71,13 @@ spec:
           value: "/pach"
         - name: NUM_SHARDS
           value: '16'
-          #TODO Double check s3 -> Minio
-          #TODO toUpper?
         - name: STORAGE_BACKEND
-          {{- if eq .Values.credentials "s3" }} 
-          value: MINIO
-          {{- else if eq .Values.credentials "google" }}
-          value: GOOGLE
-          {{- else if eq .Values.credentials "amazon" }}
-          value: AMAZON
-          {{- else if eq .Values.credentials "microsoft" }}
-          value: MICROSOFT
-          {{- else if eq .Values.credentials "local" }}
-          value: LOCAL
-          {{- end }}
-        - name: STORAGE_HOST_PATH
+          value: {{- .Values.credentials | toUpper | quote }}
           {{- if eq .Values.credentials "local" }}
+        - name: STORAGE_HOST_PATH
           value: "/var/pachyderm/pachd"
           {{- end }}
+          {{- if eq .Values.credentials "google" }}
         - name: GOOGLE_BUCKET
           valueFrom:
             secretKeyRef:
@@ -95,17 +90,14 @@ spec:
               name: pachyderm-storage-secret
               key: google-cred
               optional: true
+          {{- end }}
+          {{- if eq .Values.credentials "amazon" }}
         - name: AMAZON_BUCKET
           valueFrom:
             secretKeyRef:
               name: pachyderm-storage-secret
               key: amazon-bucket
               optional: true
-        - name: AMAZON_VAULT_ADDR
-          valueFrom:
-            secretKeyRef:
-              key: amazon-vault-addr
-              name: pachyderm-storage-secret
         - name: AMAZON_DISTRIBUTION
           valueFrom:
             secretKeyRef:
@@ -136,6 +128,8 @@ spec:
               name: pachyderm-storage-secret
               key: amazon-token
               optional: true
+          {{- end }}
+          {{- if eq .Values.credentials "microsoft" }}
         - name: MICROSOFT_CONTAINER
           valueFrom:
             secretKeyRef:
@@ -154,6 +148,8 @@ spec:
               name: pachyderm-storage-secret
               key: microsoft-secret
               optional: true
+          {{- end }}
+          {{- if eq .Values.credentials "minio" }}
         - name: MINIO_ENDPOINT
           valueFrom:
             secretKeyRef:
@@ -190,6 +186,7 @@ spec:
               name: pachyderm-storage-secret
               key: minio-signature
               optional: true
+          {{- end }}
         - name: PACHD_POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -235,8 +232,10 @@ spec:
         volumeMounts:
         - name: pachdvol
           mountPath: "/pach"
+          {{- if ne .Values.credentials "local" }}
         - name: pachyderm-storage-secret
           mountPath: "/pachyderm-storage-secret"
+          {{- end }}
         imagePullPolicy: {{ .Values.pachd.image.pullPolicy }}
         securityContext:
           privileged: true

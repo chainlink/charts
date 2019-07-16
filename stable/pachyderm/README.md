@@ -47,27 +47,29 @@ Next table lists the configurable parameters of `etcd` and their default values:
 | `*.persistence.accessMode`  | Access mode for PV    | `ReadWriteOnce`       |
 | `*.persistence.storageClass`| PVC storage class     | `nil`                 |
 
-In order to set which object store credentials you want to use, please set the flag `credentials` with one of the following values: `local | s3 | google | amazon | microsoft`.
+In order to set which object store credentials you want to use, please set the flag `credentials` with one of the following values: `local | minio | google | amazon | microsoft`.
 
 | Parameter                | Description           | Default           |
 |--------------------------|-----------------------|-------------------|
-| `credentials`            | Backend credentials   | ""                |
+| `credentials`            | Backend credentials   | "local"                |
 
 Based on the storage credentials used, fill in the corresponding parameters for your object store. Note that The `local` installation will deploy Pachyderm on your local Kubernetes cluster (i.e: minikube) backed by your local storage unit.
+
+*Note:* If using `local` on a cloud provider like Google cloud, pachderm will be configured to use hostPath, which is ephemeral storage and may be deleted if the node is recycled.
 
 On-premises deployment
 ------------------------
 
-* On an on-premise environment like Openstack, a `S3 endpoint` can be used as storage backend. The following credentials (such as Minio credentials) are configurable:
+* On an on-premise environment like Openstack, a `Minio endpoint` can be used as storage backend. The following credentials are configurable:
 
 | Parameter                | Description           | Default           |
 |--------------------------|-----------------------|-------------------|
-| `s3.accessKey`           | S3 access key         | `""`              |
-| `s3.secretKey`           | S3 secret key         | `""`              |
-| `s3.bucketName`          | S3 bucket name        | `""`              |
-| `s3.endpoint`            | S3 endpoint           | `""`              |
-| `s3.secure`              | S3 secure             | `"0"`             |
-| `s3.signature`           | S3 signature          | `"1"`             |
+| `minio.accessKey`        | Minio access key      | `""`              |
+| `minio.secretKey`        | Minio secret key      | `""`              |
+| `minio.bucketName`       | Minio bucket name     | `""`              |
+| `minio.endpoint`         | Minio endpoint        | `""`              |
+| `minio.secure`           | Minio secure          | `"0"`             |
+| `minio.signature`        | Minio signature       | `"1"`             |
 
 Google Cloud
 -------------

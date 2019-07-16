@@ -32,6 +32,7 @@ rules:
   resources:
   - replicationcontrollers
   - services
+{{- if ne .Values.credentials "local" }}
 - verbs:
   - get
   - list
@@ -45,4 +46,5 @@ rules:
   - secrets
   resourceNames:
   - pachyderm-storage-secret # must match secret name
+{{- end }}
 {{- end }}

@@ -14,14 +14,13 @@ spec:
     matchLabels:
       app: dash
       suite: {{ template "fullname" . }}
-  strategy: {}
   template:
     metadata:
       name: dash
       namespace: {{ .Release.Namespace }}
       labels:
         app: dash
-      suite: {{ template "fullname" . }}
+        suite: {{ template "fullname" . }}
     spec:
       containers:
       - image: '{{ .Values.dash.image.repository }}:{{ .Values.dash.image.tag }}'

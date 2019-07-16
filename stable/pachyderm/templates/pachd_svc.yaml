@@ -3,6 +3,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: pachd
+  namespace: {{ .Release.Namespace }}
   {{- if .Values.pachd.service.grpc.annotations }}
   annotations:
     {{ .Values.pachd.service.grpc.annotations | toYaml | indent 4 | trim  }}
@@ -50,10 +51,12 @@ spec:
       port: {{ .Values.pachd.service.git.port }}
       targetPort: api-git-port
     - name: s3gateway-port
+      {{- if eq .Values.pachd.service.type "NodePort" }}
       nodePort: {{ .Values.pachd.service.s3Gateway.nodePort }}
+      {{- end }}
       port: {{ .Values.pachd.service.s3Gateway.port }}
-      targetPort: 0 #TODO
+      targetPort: s3gateway-port
   selector:
     app: pachd
     suite: {{ template "fullname" . }}
-  type: {{ .Values.pachd.service.grpc.type | quote }}
+  type: {{ .Values.pachd.service.type }}

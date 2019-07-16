@@ -4,10 +4,11 @@ rbac:
  create: true
 
 ## Set default credentials for object store
+## Can be local, google, minio, amazon, microsoft
 credentials: "local"
 
-## S3 endpoint (i.e: Minio server) credentials
-s3:
+## Minio endpoint credentials
+minio:
  accessKey: ""
  secretKey: ""
  bucketName: ""
@@ -89,7 +90,7 @@ pachd:
 
 
 dash:
-   image: 
+   image:
       repository: pachyderm/dash
       tag: 1.9-rc4.0
    proxy:
@@ -109,7 +110,7 @@ etcd:
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
  service:
-   type: Nodeport
+   type: NodePort
  persistence:
   enabled: false
   ## etcd data Persistent Volume Storage Class
